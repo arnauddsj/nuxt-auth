@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  ADMINISTRATOR
+  MANAGER
+  MEMBER
+  GUEST
+}
+
+enum AuthStatus {
+  UNVERIFIED
+  VERIFIED // members
+}
+
+model User {
+  id         String     @id @default(uuid())
+  email      String     @unique
+  authStatus AuthStatus @default(UNVERIFIED)
+  userName   String?
+  company    String?
+  region     String?
+
+  lastLogin DateTime? @updatedAt
+
+  userType UserType @default(MEMBER)
+
+  groups      Group[]
+  authSession AuthSession[]
+  authKey     AuthKey[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  manageRegion Region?  @relation(fields: [regionId], references: [id])
+  regionId     String?
+
+  @@map("users")
+}
+
+// Start Lucia
+model AuthSession {
+  id             String @id @unique
+  active_expires BigInt
+  idle_expires   BigInt
+
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+  userId String
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("auth_sessions")
+}
+
+model AuthKey {
+  id              String  @id @unique
+  hashed_password String?
+
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+  userId String
+
+  @@index([userId])
+  @@map("auth_keys")
+}
+
+// En Lucia
+
+model Group {
+  id   String @id @default(cuid())
+  name String
+
+  members User[]
+  region  Region[]
+
+  @@map("groups")
+}
+
+model Region {
+  id String @id @default(cuid())
+
+  name String @unique
+
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String
+
+  managers User[] // related to User > ManageRegion
+
+  @@map("regions")
+}
+
+enum AuthMethod {
+  EMAIL
+  PASSWORD
+}
+
+model AppSettings {
+  id String @id @default(cuid())
+
+  authMethod  AuthMethod @default(EMAIL)
+  authDomains Json? // You can change this by a relation to a domain model if easier
+
+  @@map("app_settings")
+}
