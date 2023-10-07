@@ -24,7 +24,7 @@ const signOut = () => {
       </li>
       <li>
         <div v-if="status === 'ADMINISTRATOR' || status === 'MANAGER'">
-          <NuxtLink to="/member/region-manager">
+          <NuxtLink to="/member/regions">
             Region Manager
           </NuxtLink>
         </div>

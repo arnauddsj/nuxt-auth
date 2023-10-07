@@ -51,9 +51,9 @@ definePageMeta({
 </script>
 
 <template>
-  <h1>
+  <h2>
      You edit Region id {{ $route.params.id }}
-  </h1>
+  </h2>
   <div>
     <label for="name">Name:</label>
     <input type="text" v-model="region.name">

@@ -43,7 +43,7 @@ const groups = ref<IdName[]>([
 ]);
 
 definePageMeta({
-  layout: 'admin'
+  layout: 'region-manager'
 })
 </script>
 

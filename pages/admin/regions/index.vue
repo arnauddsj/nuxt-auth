@@ -48,7 +48,7 @@ definePageMeta({
     <h1>Regions</h1>
     <button>Add</button>
     <div>
-      Groups:
+      Regions:
       <div v-for="(region, index) in regions" :key="index" class="flex flex-col">
         <div class="flex flex-row gap-2">
           <div>

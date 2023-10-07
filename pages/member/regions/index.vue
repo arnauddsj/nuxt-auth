@@ -39,7 +39,7 @@ const members = ref<User[]>([
 ]);
 
 function edit(id: string) {
- router.push(`/admin/regions/${id}`)
+ router.push(`/member/regions/${id}`)
 }
 
 definePageMeta({
